@@ -4,26 +4,20 @@ import scipy.stats as st
 
 def plot_distributions(sample, name, n):
     
-    # =========================
-    # ======== POISSON ========
-    # =========================
     if name == "poisson":
         plt.figure()
         plt.grid()
 
-        # разумный диапазон
         lam = 5
         x_min = max(0, int(lam - 4*np.sqrt(lam)))
         x_max = int(lam + 4*np.sqrt(lam))
         values = np.arange(x_min, x_max + 1)
 
-        # эмпирические частоты
         counts = np.array([np.sum(sample == k) for k in values])
         probs_emp = counts / len(sample)
 
         plt.bar(values, probs_emp, alpha=0.7, edgecolor="black", label="Генерация")
 
-        # теоретические вероятности
         probs = st.poisson.pmf(values, lam)
         plt.plot(values, probs, 'ro-', label="Теория")
 
@@ -35,9 +29,7 @@ def plot_distributions(sample, name, n):
         return
 
 
-    # =========================
-    # ========= CAUCHY ========
-    # =========================
+
     if name == "cauchy":
 
         data_min = np.min(sample)
@@ -45,7 +37,7 @@ def plot_distributions(sample, name, n):
         span = data_max - data_min
         padding = span * 0.1 if span > 0 else 1.0
 
-        # ================= FULL RANGE =================
+        # FULL RANGE 
         plt.figure()
         plt.grid()
 
@@ -63,14 +55,13 @@ def plot_distributions(sample, name, n):
         plt.legend()
 
 
-        # ================= CENTER =================
+        # CENTER
         plt.figure()
         plt.grid()
 
         plt.hist(sample, bins="fd", density=True,
                 alpha=0.6, edgecolor="black", label="Генерация")
 
-        # центр берём фиксированный, но если диапазон меньше — не расширяем
         center_limit = 25
         x_center = np.linspace(-center_limit, center_limit, 10000)
         y_center = st.cauchy.pdf(x_center, 0, 1)
@@ -85,9 +76,6 @@ def plot_distributions(sample, name, n):
         return
 
 
-    # =========================
-    # ======== ОСТАЛЬНЫЕ ======
-    # =========================
     plt.figure()
     plt.grid()
 
